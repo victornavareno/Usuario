@@ -1,0 +1,367 @@
+openapi: 3.0.0
+info:
+  description: API para la gestión de usuarios que consumiran los servicios de la
+    aplicación
+  title: Netflix-like User Microservice API
+  version: 1.0.0
+servers:
+- description: Servidor local de desarrollo
+  url: http://localhost:8080
+tags:
+- description: El usuario que consumirá los servicios de la aplicación
+  name: usuario
+paths:
+  /usuario:
+    get:
+      description: Retorna una lista de los usuarios registrados en la aplicación
+      operationId: usuario_get
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Usuario'
+                type: array
+          description: Lista de usuarios
+        "500":
+          description: Error del servidor
+      summary: Obtener lista de usuarios registrados
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+    post:
+      description: Crea un nuevo usuario
+      operationId: usuario_post
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        "201":
+          description: Usuario creado exitosamente
+        "400":
+          description: Solicitud incorrecta
+        "500":
+          description: Error del servidor
+      summary: Crear un nuevo usuario
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+  /usuario/{email}:
+    delete:
+      description: Elimina un usuario específico del sistema
+      operationId: usuario_email_delete
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Usuario eliminado exitosamente
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error del servidor
+      summary: Eliminar un usuario específico por su email
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+    get:
+      description: Retorna la información de un usuario por su email
+      operationId: usuario_email_get
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+          description: Detalles del usuario
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error del servidor
+      summary: Obtener un usuario específico por su email
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+    put:
+      description: Actualiza un usuario registrado en el sistema
+      operationId: usuario_email_put
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+          description: Usuario actualizado exitosamente
+        "400":
+          description: ID no válido
+        "404":
+          description: Usuario no encontrado
+        "422":
+          description: Validation exception
+      summary: Actualizar un usuario específico por su email
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+  /usuario/{email}/Perfil:
+    get:
+      description: Retorna la lista de perfiles de un usuario específico
+      operationId: usuario_email_perfil_get
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Usuario'
+                type: array
+          description: Listado de perfiles
+        "404":
+          description: Usuario no encontrado
+        "500":
+          description: Error del servidor
+      summary: Obtener una lista de perfiles de un usuario
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+    post:
+      description: Añade un nuevo perfil a un usuario dado su email
+      operationId: usuario_email_perfil_post
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Usuario'
+        required: true
+      responses:
+        "201":
+          description: Perfil creado exitosamente
+        "400":
+          description: Solicitud incorrecta
+        "500":
+          description: Error del servidor
+      summary: Añadir un nuevo perfil a un usuario
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+  /usuario/{email}/{nombre}:
+    delete:
+      description: Elimina un perfil específico de un usuario
+      operationId: usuario_email_nombre_delete
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: nombre
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: Perfil eliminado exitosamente
+        "404":
+          description: Usuario o perfil no encontrado
+        "500":
+          description: Error del servidor
+      summary: Eliminar un perfil específico de un usuario determinado por su email
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+    get:
+      description: Retorna los datos de un perfil específico de un usuario
+      operationId: usuario_email_nombre_get
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: nombre
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+          description: Perfil obtenido con éxito
+        "400":
+          description: Email o nombre no válidos
+        "404":
+          description: Perfil no encontrado
+      summary: Obtener un perfil específico
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+    put:
+      description: Actualiza un perfil específico de un usuario registrado en el sistema
+      operationId: usuario_email_nombre_put
+      parameters:
+      - explode: false
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: nombre
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Usuario'
+          description: Perfil actualizado exitosamente
+        "400":
+          description: Valores no válidos
+        "404":
+          description: Usuario o perfil no encontrado
+        "422":
+          description: Validation exception
+      summary: Actualizar un perfil específico
+      tags:
+      - usuario
+      x-openapi-router-controller: openapi_server.controllers.usuario_controller
+components:
+  schemas:
+    Usuario:
+      example:
+        metodoPago: tarjeta de credito
+        idUsuario: 10
+        perfiles:
+        - imagen:
+          - imagen
+          - imagen
+          nombre: nombre
+        - imagen:
+          - imagen
+          - imagen
+          nombre: nombre
+        email: email
+        contraseña: contraseña
+        status: activo
+      properties:
+        idUsuario:
+          description: Identificador único del contenido
+          example: 10
+          title: idUsuario
+          type: integer
+        email:
+          title: email
+          type: string
+        contraseña:
+          title: contraseña
+          type: string
+        metodoPago:
+          enum:
+          - tarjeta de credito
+          - tarjeta virtual
+          - tarjeta prepago
+          - paypal
+          title: metodoPago
+          type: string
+        status:
+          enum:
+          - activo
+          - en suspensión
+          title: status
+          type: string
+        perfiles:
+          description: Perfiles dentro de una misma cuenta
+          items:
+            $ref: '#/components/schemas/Usuario_perfiles_inner'
+          title: perfiles
+          type: array
+      title: Usuario
+      type: object
+    Usuario_perfiles_inner:
+      example:
+        imagen:
+        - imagen
+        - imagen
+        nombre: nombre
+      properties:
+        nombre:
+          description: nombre del perfil
+          title: nombre
+          type: string
+        imagen:
+          items:
+            type: string
+            xml:
+              name: photoUrl
+          title: imagen
+          type: array
+          xml:
+            wrapped: true
+      title: Usuario_perfiles_inner
+      type: object
